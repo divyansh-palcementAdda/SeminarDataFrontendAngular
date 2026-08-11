@@ -1,0 +1,128 @@
+<div class="landing-page">
+
+  <!-- Hero Section -->
+  <section class="landing-hero">
+    <div class="landing-hero-blur-1"></div>
+    <div class="landing-hero-blur-2"></div>
+    <div class="landing-hero-inner">
+
+      <!-- Left: Content -->
+      <div class="landing-hero-content">
+        <div class="landing-badge">
+          <img src="assets/logo.png" alt="RU" class="landing-badge-logo" />
+          <span>Renaissance University &bull; Seminar &amp; Outreach Cell</span>
+        </div>
+
+        <h1 class="landing-hero-title">
+          School Outreach<br>
+          <span>Seminar Program</span>
+        </h1>
+
+        <p class="landing-hero-desc">
+          Renaissance University organizes career guidance and awareness seminars for school students across Madhya Pradesh.
+          Scan the QR code at the event, fill in your details, and collect your official participation certificate.
+        </p>
+
+        <!-- Notice Box -->
+        <div class="landing-notice">
+          <div class="landing-notice-title">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>How it works</span>
+          </div>
+          <ul class="landing-notice-list">
+            <li><i class="bi bi-qr-code-scan"></i> Scan the QR code shown at the end of the seminar</li>
+            <li><i class="bi bi-person-fill"></i> Submit your details in the student registration form</li>
+            <li><i class="bi bi-patch-check-fill"></i> Download your participation certificate once released</li>
+          </ul>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="landing-cta-row">
+          <a routerLink="/student-form" class="landing-btn-primary">
+            <i class="bi bi-pencil-square"></i>
+            <span>Fill Registration Form</span>
+          </a>
+          <a routerLink="/certificate" class="landing-btn-outline">
+            <i class="bi bi-patch-check"></i>
+            <span>Check Certificate</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Active Seminar Card -->
+      <div class="landing-hero-card-wrap">
+        <div class="landing-hero-card">
+          <div class="landing-card-img-wrap">
+            <img
+              [src]="activeSeminar()?.bannerImage || 'assets/images/renaissance-seminar-banner.jpg'"
+              [alt]="activeSeminar()?.title || 'Renaissance University Seminar'"
+              class="landing-card-img"
+              onerror="this.src='https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80'"
+            />
+            <div class="landing-card-status-badge">
+              <i class="bi bi-circle-fill pulse-dot"></i>
+              {{ activeSeminar()?.status === 'ONGOING' ? 'Live Now' : (activeSeminar()?.status === 'UPCOMING' ? 'Upcoming' : 'Form Active') }}
+            </div>
+          </div>
+          <div class="landing-card-body">
+            <div class="landing-card-organizer">
+              <i class="bi bi-building-fill"></i>
+              <span>{{ activeSeminar()?.organizer || 'Renaissance University' }}</span>
+            </div>
+            <h3 class="landing-card-title">{{ activeSeminar()?.title || 'School Outreach Seminar' }}</h3>
+            <p class="landing-card-desc">{{ activeSeminar()?.description || 'Career guidance and awareness program for 12th standard students.' }}</p>
+            @if (activeSeminar()?.seminarDate) {
+              <div class="landing-card-meta">
+                <span><i class="bi bi-calendar3"></i> {{ activeSeminar()?.seminarDate | date:'d MMM y' }}</span>
+                @if (activeSeminar()?.venue) {
+                  <span><i class="bi bi-geo-alt-fill"></i> {{ activeSeminar()?.venue }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Stats / Features Strip -->
+  <section class="landing-stats">
+    <div class="landing-stats-inner">
+      <div class="landing-stat-item">
+        <div class="landing-stat-icon landing-stat-icon-logo">
+          <img src="assets/logo.png" alt="Renaissance University" />
+        </div>
+        <div class="landing-stat-text">
+          <span class="landing-stat-value">Renaissance University</span>
+          <span class="landing-stat-label">Organizer &amp; Host</span>
+        </div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat-item">
+        <div class="landing-stat-icon"><i class="bi bi-people-fill"></i></div>
+        <div class="landing-stat-text">
+          <span class="landing-stat-value">School Students</span>
+          <span class="landing-stat-label">12th Standard Participants</span>
+        </div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat-item">
+        <div class="landing-stat-icon"><i class="bi bi-award-fill"></i></div>
+        <div class="landing-stat-text">
+          <span class="landing-stat-value">Digital Certificate</span>
+          <span class="landing-stat-label">Official Participation Record</span>
+        </div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat-item">
+        <div class="landing-stat-icon"><i class="bi bi-qr-code-scan"></i></div>
+        <div class="landing-stat-text">
+          <span class="landing-stat-value">QR-Based Entry</span>
+          <span class="landing-stat-label">Instant Form Access</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

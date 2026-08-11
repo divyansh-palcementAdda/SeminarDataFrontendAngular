@@ -1,0 +1,372 @@
+<div class="reg-page">
+
+  <!-- Page Hero Banner -->
+  <div class="reg-hero">
+    <div class="reg-hero-blur-1"></div>
+    <div class="reg-hero-blur-2"></div>
+    <div class="reg-hero-content">
+
+      <!-- Branding — shown on ALL screens, centered on mobile, right column on desktop -->
+      <div class="reg-hero-branding">
+        <div class="reg-hero-branding-tagline">Organized &amp; Hosted By</div>
+        <div class="reg-hero-branding-logo-wrap">
+          <img src="assets/logo.png" alt="Renaissance University Logo" class="reg-hero-branding-logo" />
+        </div>
+        <!-- <div class="reg-hero-branding-name">Renaissance University</div>
+        <div class="reg-hero-branding-sub">Chhindwara, Madhya Pradesh</div> -->
+      </div>
+
+      <!-- Left: Text + Info Cards -->
+      <div class="reg-hero-left">
+        <div class="reg-hero-text">
+          <!-- <div class="reg-hero-badge">
+            <img src="assets/logo.png" alt="RU" class="reg-hero-badge-logo" />
+            <span>Renaissance University &nbsp;&bull;&nbsp;</span>
+          </div> -->
+          <h1 class="reg-hero-title">
+            {{ activeSeminar()?.title || 'Participant Registration' }}
+          </h1>
+          @if (activeSeminar()?.description) {
+          <p class="reg-hero-desc">{{ activeSeminar()!.description }}</p>
+          } @else {
+          <p class="reg-hero-desc">
+            You attended a seminar organized by Renaissance University. Please fill in your details below —
+            your official participation certificate will be issued once the event is processed.
+          </p>
+          }
+        </div>
+
+        <div class="reg-hero-info-cards">
+          <div class="reg-info-card">
+            <div class="reg-info-icon"><i class="bi bi-calendar-event-fill"></i></div>
+            <div class="reg-info-body">
+              <span class="reg-info-label">Event Date</span>
+              <span class="reg-info-value">{{ activeSeminar()?.seminarDate | date:'MMMM d, y' }}</span>
+            </div>
+          </div>
+          <div class="reg-info-card">
+            <div class="reg-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+            <div class="reg-info-body">
+              <span class="reg-info-label">Venue</span>
+              <span class="reg-info-value reg-info-value-wrap">{{ activeSeminar()?.venue || 'School Premises' }}</span>
+            </div>
+          </div>
+          <div class="reg-info-card">
+            <div class="reg-info-icon"><i class="bi bi-building-fill"></i></div>
+            <div class="reg-info-body">
+              <span class="reg-info-label">Organizer</span>
+              <span class="reg-info-value">{{ activeSeminar()?.organizer || 'Renaissance University' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="reg-body">
+
+    <!-- Seminar Load Error (blocks form) -->
+    @if (seminarLoadError()) {
+    <div class="reg-seminar-error">
+      <div class="reg-seminar-error-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <div>
+        <h3 class="reg-seminar-error-title">Form Unavailable</h3>
+        <p class="reg-seminar-error-body">{{ seminarLoadError() }}</p>
+      </div>
+    </div>
+    }
+
+    <!-- Seminar Loading Skeleton -->
+    @if (isSeminarLoading()) {
+    <div class="reg-form-card reg-loading-card">
+      <div class="reg-skeleton reg-skeleton-title"></div>
+      <div class="reg-skeleton reg-skeleton-line"></div>
+      <div class="reg-skeleton reg-skeleton-line short"></div>
+    </div>
+    }
+
+    <!-- Form Card — only show when seminar loaded and no blocking error -->
+    @if (!isSeminarLoading() && activeSeminar() && !seminarLoadError()) {
+
+    <!-- Form Card -->
+    <div class="reg-form-card">
+
+      <!-- Card Header -->
+      <div class="reg-form-header">
+        <div class="reg-form-header-icon">
+          <i class="bi bi-person-vcard-fill"></i>
+        </div>
+        <div class="reg-form-header-body">
+          <h2 class="reg-form-title">{{ activeSeminar()?.title || 'Student Participation Form' }}</h2>
+          <div class="reg-form-meta">
+            <span class="reg-form-meta-item">
+              <i class="bi bi-building-fill"></i>
+              {{ activeSeminar()?.organizer || 'Renaissance University' }}
+            </span>
+            @if (activeSeminar()?.seminarDate) {
+            <span class="reg-form-meta-sep">&bull;</span>
+            <span class="reg-form-meta-item">
+              <i class="bi bi-calendar3"></i>
+              {{ activeSeminar()!.seminarDate | date:'d MMM y' }}
+            </span>
+            }
+            <!-- @if (activeSeminar()?.venue) {
+              <span class="reg-form-meta-sep reg-form-meta-sep-venue">&bull;</span>
+              <span class="reg-form-meta-item reg-form-meta-venue">
+                <i class="bi bi-geo-alt-fill"></i>
+                {{ activeSeminar()!.venue }}
+              </span>
+            } -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      @if (errorMessage()) {
+      <div class="reg-alert reg-alert-error">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="reg-form">
+
+        <!-- Row 1: Full Name + Mobile -->
+        <div class="reg-form-row">
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="fullName">
+              Full Name <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap" [class.has-error]="isFieldInvalid('fullName')"
+              [class.has-success]="isFieldValid('fullName')">
+              <i class="bi bi-person-fill reg-field-icon"></i>
+              <input id="fullName" type="text" formControlName="fullName" placeholder="Enter your full name"
+                class="reg-field-input" />
+            </div>
+            @if (isFieldInvalid('fullName')) {
+            <span class="reg-field-error">
+              @if (registrationForm.get('fullName')?.errors?.['required']) { Full name is required. }
+              @if (registrationForm.get('fullName')?.errors?.['minlength']) { Must be at least 3 characters. }
+            </span>
+            }
+          </div>
+
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="mobileNumber">
+              Mobile Number <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap" [class.has-error]="isFieldInvalid('mobileNumber')"
+              [class.has-success]="isFieldValid('mobileNumber')">
+              <i class="bi bi-phone-fill reg-field-icon"></i>
+              <input id="mobileNumber" type="tel" formControlName="mobileNumber" placeholder="10-digit mobile number"
+                (blur)="copyMobileToWhatsapp()" class="reg-field-input" />
+            </div>
+            @if (isFieldInvalid('mobileNumber')) {
+            <span class="reg-field-error">
+              @if (registrationForm.get('mobileNumber')?.errors?.['required']) { Mobile number is required. }
+              @if (registrationForm.get('mobileNumber')?.errors?.['pattern']) { Enter a valid 10-digit Indian mobile
+              number. }
+            </span>
+            }
+          </div>
+        </div>
+
+        <!-- Row 2: WhatsApp + Email -->
+        <div class="reg-form-row">
+          <div class="reg-field-group">
+            <div class="reg-field-label-row">
+              <label class="reg-field-label" for="whatsappNumber">
+                WhatsApp Number <span class="req">*</span>
+              </label>
+              <label class="reg-same-as-mobile">
+                <input
+                  type="checkbox"
+                  class="reg-same-checkbox"
+                  (change)="onSameAsMobileChange($event)"
+                  [checked]="sameAsMobile()"
+                />
+                <span>Same as mobile</span>
+              </label>
+            </div>
+            <div class="reg-field-wrap" [class.has-error]="isFieldInvalid('whatsappNumber')"
+              [class.has-success]="isFieldValid('whatsappNumber')"
+              [class.is-disabled]="sameAsMobile()">
+              <i class="bi bi-whatsapp reg-field-icon whatsapp-icon"></i>
+              <input id="whatsappNumber" type="tel" formControlName="whatsappNumber" placeholder="WhatsApp number"
+                class="reg-field-input" />
+            </div>
+            @if (isFieldInvalid('whatsappNumber')) {
+            <span class="reg-field-error">
+              @if (registrationForm.get('whatsappNumber')?.errors?.['required']) { WhatsApp number is required. }
+              @if (registrationForm.get('whatsappNumber')?.errors?.['pattern']) { Enter a valid 10-digit Indian WhatsApp number. }
+            </span>
+            }
+          </div>
+
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="email">
+              Email Address <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap" [class.has-error]="isFieldInvalid('email')"
+              [class.has-success]="isFieldValid('email')">
+              <i class="bi bi-envelope-fill reg-field-icon"></i>
+              <input id="email" type="email" formControlName="email" placeholder="your@email.com"
+                class="reg-field-input" />
+            </div>
+            @if (isFieldInvalid('email')) {
+            <span class="reg-field-error">
+              @if (registrationForm.get('email')?.errors?.['required']) { Email address is required. }
+              @if (registrationForm.get('email')?.errors?.['email']) { Enter a valid email address. }
+            </span>
+            }
+          </div>
+        </div>
+
+        <!-- Row 3: School Name (Full Width) -->
+        <div class="reg-field-group">
+          <label class="reg-field-label" for="schoolName">
+            School / Institution Name <span class="req">*</span>
+          </label>
+          <div class="reg-field-wrap" [class.has-error]="isFieldInvalid('schoolName')"
+            [class.has-success]="isFieldValid('schoolName')">
+            <i class="bi bi-building-fill reg-field-icon"></i>
+            <input id="schoolName" type="text" formControlName="schoolName"
+              placeholder="Enter your school or institution name" class="reg-field-input" />
+          </div>
+          @if (isFieldInvalid('schoolName')) {
+          <span class="reg-field-error">School / Institution name is required.</span>
+          }
+        </div>
+
+        <!-- Row 4: Education Board + Course Stream -->
+        <div class="reg-form-row">
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="board">
+              Education Board <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap reg-select-wrap" [class.has-error]="isFieldInvalid('board')"
+              [class.has-success]="isFieldValid('board')">
+              <i class="bi bi-award-fill reg-field-icon"></i>
+              <select id="board" formControlName="board" class="reg-field-input reg-field-select">
+                <option value="" disabled selected>Select your board</option>
+                @for (item of boards; track item.value) {
+                <option [value]="item.value">{{ item.label }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down reg-select-arrow"></i>
+            </div>
+            @if (isFieldInvalid('board')) {
+            <span class="reg-field-error">Please select your education board.</span>
+            }
+          </div>
+
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="course">
+              12th Course / Stream <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap reg-select-wrap" [class.has-error]="isFieldInvalid('course')"
+              [class.has-success]="isFieldValid('course')">
+              <i class="bi bi-book-fill reg-field-icon"></i>
+              <select id="course" formControlName="course" class="reg-field-input reg-field-select">
+                <option value="" disabled selected>Select your stream</option>
+                @for (item of courses; track item.value) {
+                <option [value]="item.value">{{ item.label }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down reg-select-arrow"></i>
+            </div>
+            @if (isFieldInvalid('course')) {
+            <span class="reg-field-error">Please select your 12th course stream.</span>
+            }
+          </div>
+        </div>
+
+        <!-- Row 5: State + City -->
+        <div class="reg-form-row">
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="state">
+              State <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap reg-select-wrap" [class.has-error]="isFieldInvalid('state')"
+              [class.has-success]="isFieldValid('state')">
+              <i class="bi bi-geo-fill reg-field-icon"></i>
+              <select id="state" formControlName="state" class="reg-field-input reg-field-select">
+                <option value="" disabled selected>Select your state</option>
+                @for (s of states; track s) {
+                <option [value]="s">{{ s }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down reg-select-arrow"></i>
+            </div>
+            @if (isFieldInvalid('state')) {
+            <span class="reg-field-error">Please select your state.</span>
+            }
+          </div>
+
+          <div class="reg-field-group">
+            <label class="reg-field-label" for="city">
+              City <span class="req">*</span>
+            </label>
+            <div class="reg-field-wrap reg-select-wrap" [class.has-error]="isFieldInvalid('city')"
+              [class.has-success]="isFieldValid('city')" [class.is-disabled]="!registrationForm.get('state')?.value">
+              <i class="bi bi-building reg-field-icon"></i>
+              <select id="city" formControlName="city" class="reg-field-input reg-field-select"
+                [attr.disabled]="!registrationForm.get('state')?.value ? true : null">
+                <option value="" disabled selected>
+                  {{ registrationForm.get('state')?.value ? 'Select your city' : 'Select state first' }}
+                </option>
+                @for (c of cities; track c) {
+                <option [value]="c">{{ c }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down reg-select-arrow"></i>
+            </div>
+            @if (isFieldInvalid('city')) {
+            <span class="reg-field-error">Please select your city.</span>
+            }
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="reg-submit-row">
+          <button type="submit" [disabled]="registrationForm.invalid || isSubmitting()" class="reg-submit-btn">
+            @if (isSubmitting()) {
+            <span class="reg-spinner"></span>
+            <span>Submitting...</span>
+            } @else {
+            <i class="bi bi-send-fill"></i>
+            <span class="reg-submit-text-full">Submit Information to Claim your Certificate</span>
+            <span class="reg-submit-text-short">Submit &amp; Claim Certificate</span>
+            }
+          </button>
+        </div>
+
+      </form>
+    </div><!-- /reg-form-card -->
+
+    } <!-- /if seminar loaded -->
+
+    <!-- Certificate CTA Card -->
+    <!-- <div class="reg-cert-cta">
+      <div class="reg-cert-cta-left">
+        <div class="reg-cert-cta-icon">
+          <i class="bi bi-patch-check-fill"></i>
+        </div>
+        <div>
+          <h3 class="reg-cert-cta-title">Already Attended a Seminar?</h3>
+          <p class="reg-cert-cta-desc">Certificates are issued by Renaissance University once the event is processed. Check your status here.</p>
+        </div>
+      </div>
+      <a routerLink="/certificate" class="reg-cert-cta-btn">
+        <i class="bi bi-search"></i>
+        Check Certificate Status
+      </a>
+    </div> -->
+
+  </div>
+</div>

@@ -1,0 +1,10 @@
+@if (loadingService.isLoading()) {
+  <div class="overlay flex flex-col items-center justify-center fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-all duration-300">
+    <div class="glass-card p-6 rounded-2xl flex flex-col items-center shadow-2xl bg-white/90 border border-white/20">
+      <div class="spinner-border text-primary w-12 h-12 mb-3 role-spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-sm font-semibold text-slate-700 m-0 animate-pulse">Processing request...</p>
+    </div>
+  </div>
+}

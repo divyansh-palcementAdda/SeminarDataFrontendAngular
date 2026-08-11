@@ -1,0 +1,95 @@
+<div class="success-page">
+  <div class="success-card-wrap">
+
+    <div class="success-card">
+
+      <!-- Success Icon -->
+      <div class="success-icon">
+        <i class="bi bi-patch-check-fill"></i>
+      </div>
+
+      <!-- Title -->
+      <div class="success-title-wrap">
+        <h2 class="success-title">Certificate Issued Succesfully</h2>
+        <p class="success-subtitle">
+          Your details have been saved by <strong>Renaissance University</strong>.
+          Your participation certificate has been generated and is ready to download.
+        </p>
+      </div>
+
+      <!-- Submission Summary -->
+      <div class="success-summary">
+        <div class="success-summary-row">
+          <span class="success-summary-label">Participant Name</span>
+          <span class="success-summary-value">{{ registration()?.fullName }}</span>
+        </div>
+        <div class="success-summary-row">
+          <span class="success-summary-label">Program / Seminar</span>
+          <span class="success-summary-value highlight">{{ registration()?.seminarTitle }}</span>
+        </div>
+        <div class="success-summary-row">
+          <span class="success-summary-label">School</span>
+          <span class="success-summary-value">{{ registration()?.schoolName }}</span>
+        </div>
+        <div class="success-summary-row">
+          <span class="success-summary-label">Registered Email</span>
+          <span class="success-summary-value">{{ registration()?.email }}</span>
+        </div>
+        @if (registration()?.certificateId) {
+          <div class="success-summary-row border-none">
+            <span class="success-summary-label">Certificate ID</span>
+            <span class="success-summary-value cert-id">{{ registration()?.certificateId }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Email Notice -->
+      <div class="success-email-notice">
+        <i class="bi bi-envelope-check-fill"></i>
+        <div>
+          <strong>Certificate sent to your email!</strong>
+          <span> A copy of your certificate has been dispatched to <em>{{ registration()?.email }}</em>. Check your inbox (and spam folder).</span>
+        </div>
+      </div>
+
+      <!-- Download Error -->
+      @if (downloadError()) {
+        <div class="success-download-error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ downloadError() }}</span>
+        </div>
+      }
+
+      <!-- Action Buttons -->
+      <div class="success-actions">
+
+        <!-- Primary: Download Certificate -->
+        @if (registration()?.certificateId) {
+          <button
+            type="button"
+            (click)="downloadCertificate()"
+            [disabled]="isDownloading()"
+            class="success-btn-download"
+          >
+            @if (isDownloading()) {
+              <span class="success-spinner"></span>
+              <span>Preparing PDF...</span>
+            } @else {
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <span>Download Certificate (PDF)</span>
+            }
+          </button>
+        }
+
+        <!-- Secondary: Check status later -->
+        <!-- <a routerLink="/certificate" class="success-btn-outline">
+          <i class="bi bi-search"></i>
+          <span>Check Certificate Status</span>
+        </a> -->
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

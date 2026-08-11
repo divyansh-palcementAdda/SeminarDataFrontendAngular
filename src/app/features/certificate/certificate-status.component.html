@@ -1,0 +1,169 @@
+<div class="cert-page">
+  <div class="cert-card-wrap">
+
+    <div class="cert-card">
+
+      <!-- Header -->
+      <div class="cert-header">
+        <div class="cert-header-icon">
+          <i class="bi bi-patch-check-fill"></i>
+        </div>
+        <div>
+          <h2 class="cert-title">Check Certificate Status</h2>
+          <p class="cert-subtitle">Enter your registered email address or 10-digit mobile number to check your Renaissance University participation certificate.</p>
+        </div>
+      </div>
+
+      <!-- Search Form -->
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="cert-search-form">
+        <div class="cert-search-row">
+          <div class="cert-search-input-wrap" [class.has-error]="searchForm.get('query')?.touched && searchForm.get('query')?.invalid">
+            <i class="bi bi-search cert-search-icon"></i>
+            <input
+              type="text"
+              formControlName="query"
+              placeholder="Email address or 10-digit mobile number"
+              class="cert-search-input"
+            />
+          </div>
+          <button
+            type="submit"
+            [disabled]="searchForm.invalid || isSearching()"
+            class="cert-search-btn"
+          >
+            @if (isSearching()) {
+              <span class="cert-spinner"></span>
+              <span>Searching...</span>
+            } @else {
+              <i class="bi bi-search"></i>
+              <span>Check Status</span>
+            }
+          </button>
+        </div>
+        @if (searchForm.get('query')?.touched && searchForm.get('query')?.invalid) {
+          <span class="cert-field-error">Please enter your registered email or 10-digit mobile number.</span>
+        }
+      </form>
+
+      <!-- Results -->
+      @if (searched()) {
+
+        <!-- Not Found -->
+        @if (searchError()) {
+          <div class="cert-alert cert-alert-warning">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              <div class="cert-alert-title">Record Not Found</div>
+              <div class="cert-alert-body">{{ searchError() }}</div>
+            </div>
+          </div>
+        }
+
+        <!-- Found -->
+        @if (recordFound()) {
+          <div class="cert-result">
+
+            <!-- Participant Header Row -->
+            <div class="cert-result-top">
+              <div class="cert-result-info">
+                <h4 class="cert-result-name">{{ recordFound()?.fullName }}</h4>
+                <p class="cert-result-seminar">{{ recordFound()?.seminarTitle }}</p>
+                <p class="cert-result-school">{{ recordFound()?.schoolName }}</p>
+              </div>
+
+              <!-- Status Badge -->
+              <div>
+                @if (recordFound()?.certificateGenerated) {
+                  @if (recordFound()?.certificateDownloaded) {
+                    <span class="cert-badge cert-badge-downloaded">
+                      <i class="bi bi-check-all"></i> Downloaded
+                    </span>
+                  } @else {
+                    <span class="cert-badge cert-badge-available">
+                      <i class="bi bi-patch-check-fill"></i> Available
+                    </span>
+                  }
+                } @else {
+                  <span class="cert-badge cert-badge-pending">
+                    <i class="bi bi-clock-history"></i> Pending
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="cert-result-grid">
+              <div class="cert-result-field">
+                <span class="cert-result-label">Registered Email</span>
+                <span class="cert-result-value">{{ recordFound()?.email }}</span>
+              </div>
+              <div class="cert-result-field">
+                <span class="cert-result-label">Mobile Number</span>
+                <span class="cert-result-value">{{ recordFound()?.mobileNumber }}</span>
+              </div>
+              <div class="cert-result-field">
+                <span class="cert-result-label">Board</span>
+                <span class="cert-result-value">{{ recordFound()?.board }}</span>
+              </div>
+              <div class="cert-result-field">
+                <span class="cert-result-label">Certificate ID</span>
+                <span class="cert-result-value cert-id">{{ recordFound()?.certificateId || '—' }}</span>
+              </div>
+            </div>
+
+            <!-- Certificate Actions -->
+            <div class="cert-result-actions">
+              @if (!recordFound()?.certificateGenerated) {
+                <div class="cert-alert cert-alert-info">
+                  <i class="bi bi-hourglass-split"></i>
+                  <span>Your certificate is being prepared by Renaissance University. Please check back after the event is processed.</span>
+                </div>
+              } @else {
+                <div class="cert-download-section">
+                  @if (recordFound()?.emailVerified) {
+                    <div class="cert-email-notice">
+                      <i class="bi bi-envelope-check-fill"></i>
+                      <span>A copy of this certificate has been sent to your registered email.</span>
+                    </div>
+                  }
+
+                  @if (downloadError()) {
+                    <div class="cert-alert cert-alert-error">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                      <span>{{ downloadError() }}</span>
+                    </div>
+                  }
+
+                  <button
+                    type="button"
+                    (click)="downloadCertificate()"
+                    [disabled]="isDownloading()"
+                    class="cert-download-btn"
+                  >
+                    @if (isDownloading()) {
+                      <span class="cert-spinner"></span>
+                      <span>Preparing Certificate...</span>
+                    } @else {
+                      <i class="bi bi-file-earmark-pdf-fill"></i>
+                      <span>Download Participation Certificate (PDF)</span>
+                    }
+                  </button>
+                </div>
+              }
+            </div>
+
+          </div>
+        }
+
+      }
+
+    </div>
+
+    <!-- Help text -->
+    <p class="cert-help-text">
+      Certificates are issued by <strong>Renaissance University</strong> after each outreach event is processed.
+      For assistance, contact the university's Seminar &amp; Outreach Cell.
+    </p>
+
+  </div>
+</div>

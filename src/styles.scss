@@ -1,0 +1,82 @@
+@use "tailwindcss";
+
+/* Google Font - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Global University Portal Design Tokens */
+:root {
+  --primary-blue: #2563eb;
+  --primary-blue-hover: #1d4ed8;
+  --bg-slate: #f1f5f9;
+  --card-white: #ffffff;
+  --border-slate: #e2e8f0;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-slate);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent Bootstrap .btn from affecting plain anchor tags with no btn class */
+a:not([class*="btn"]) {
+  text-decoration: none;
+}
+
+/* Typography Scale */
+.hero-title {
+  font-size: clamp(2rem, 5vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.heading-title {
+  font-size: clamp(1.25rem, 3vw, 30px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.sub-heading {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.body-text {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out;
+}
